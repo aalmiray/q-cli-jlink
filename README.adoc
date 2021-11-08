@@ -1,0 +1,61 @@
+= q-cli-jlink
+
+Sample Quarkus CLI application (packaged with jlink)
+
+Shows how a link:https://quarkus.io/[Quarkus] application may be configured and packaged to create cross-platform
+custom Java Runtimes with jlink, package each JR as a zip distribution and publish them as assets on a Git release
+via link:https://jreleaser.org[JReleaser].
+
+== Prerequisites
+
+This sample requires features from JReleaser `v0.9.0-SNAPSHOT` (unreleased).
+You must build and install your own snapshot first.
+
+WARNING: You need Java 11 to build JReleaser. It might work with other versions up to 15 but no greater than 15.
+
+.Steps
+1. `git clone https://github.com/jreleaser/jreleaser.git`
+2. `cd jreleaser`
+3. `./gradlew publishToMavenLocal`
+
+== Building
+
+WARNING: Java 11 is required to build this sample. You can not use a greater version, it must be exactly 11 or any
+of its updates.
+
+`$ ./mvnw package`
+
+== Assembling
+
+* Download all required JDKs
+
+`$ ./mvnw -Passemble jdks:setup-jdks`
+
+* Assemble the custom Java Runtimes
+
+`$ ./mvnw -Passemble jreleaser:assemble`
+
+Inspect the artifacts found at `target/jreleaser/assemble/q-cli/jlink`
+
+== Releasing
+
+Posting a release from a local environment
+
+.Display configuration
+`$ ./mvnw -Prelease jreleaser:config`
+
+.Dryrun mode
+`$ ./mvnw -Prelease jreleaser:release -Djreleaser.dryrun=true`
+
+.For production
+`$ ./mvnw -Prelease jreleaser:release`
+
+Inspect additional artifacts found at `target/jreleaser`:
+
+```
+target/jreleaser/
+├── output.properties
+├── release
+│   └── CHANGELOG.md
+└── trace.log
+```
