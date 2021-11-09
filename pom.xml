@@ -181,7 +181,7 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jdks-maven-plugin</artifactId>
-                        <version>${jreleaser-plugin.version}</version>
+                        <version>0.8.0</version>
                         <configuration>
                             <jdks>
                                 <jdk>
@@ -224,7 +224,6 @@
                                                 <mainClass>io.quarkus.bootstrap.runner.QuarkusEntryPoint</mainClass>
                                             </java>
                                             <imageName>{{distributionName}}-{{projectVersion}}</imageName>
-                                            <executable>q-cli</executable>
                                             <targetJdks>
                                                 <targetJdk>
                                                     <path>${project.build.directory}/jdks/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home</path>
@@ -303,12 +302,12 @@
                                             </labelers>
                                             <categories>
                                                 <category>
-                                                    <title>Tasks</title>
+                                                    <title>🧰 Tasks</title>
                                                     <labels>task,task_prep,task_rel</labels>
                                                 </category>
                                             </categories>
                                             <hide>
-                                                <categories>Merge</categories>
+                                                <categories>🔀 Merge</categories>
                                                 <contributors>GitHub,dependabot</contributors>
                                             </hide>
                                         </changelog>
