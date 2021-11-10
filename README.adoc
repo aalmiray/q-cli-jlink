@@ -35,7 +35,9 @@ of its updates.
 
 `$ ./mvnw -Passemble jreleaser:assemble`
 
-Inspect the artifacts found at `target/jreleaser/assemble/q-cli/jlink`
+Inspect the artifacts found at `target/jreleaser/assemble/q-cli/jlink` and run one:
+
+`$ target/jreleaser/assemble/q-cli/jlink/work-linux-x86_64/q-cli-0.1.0-linux-x86_64/bin/q-cli`
 
 == Releasing
 
