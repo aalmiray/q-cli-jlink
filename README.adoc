@@ -18,22 +18,14 @@ WARNING: You need Java 11 to build JReleaser. It might work with other versions 
 2. `cd jreleaser`
 3. `./gradlew publishToMavenLocal`
 
-== Building
+== Building and assembling
 
 WARNING: Java 11 is required to build this sample. You can not use a greater version, it must be exactly 11 or any
 of its updates.
 
-`$ ./mvnw package`
+Build the project, download all required JDKs (`jdks:setup-jdks`) and assemble the custom Java Runtimes (jreleaser:assemble`):
 
-== Assembling
-
-* Download all required JDKs
-
-`$ ./mvnw -Passemble jdks:setup-jdks`
-
-* Assemble the custom Java Runtimes
-
-`$ ./mvnw -Passemble jreleaser:assemble`
+`$ ./mvnw package -Passemble jdks:setup-jdks jreleaser:assemble`
 
 Inspect the artifacts found at `target/jreleaser/assemble/q-cli/jlink` and run one:
 
