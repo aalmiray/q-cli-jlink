@@ -20,8 +20,7 @@ WARNING: You need Java 11 to build JReleaser. It might work with other versions 
 
 == Building & Assembling
 
-WARNING: Java 11 is required to build this sample. You can not use a greater version, it must be exactly 11 or any
-of its updates.
+WARNING: Java 11 is required to build this sample.
 
 `$ ./mvnw -Passemble package`
 

@@ -80,26 +80,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <phase>validate</phase>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>[11,12)</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.platform.version}</version>
@@ -182,6 +162,28 @@
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jdks-maven-plugin</artifactId>
                         <version>0.8.0</version>
+                        <configuration>
+                            <jdks>
+                                <jdk>
+                                    <name>zulu11Linux</name>
+                                    <platform>linux</platform>
+                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
+                                    <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
+                                </jdk>
+                                <jdk>
+                                    <name>zulu11Windows</name>
+                                    <platform>windows</platform>
+                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
+                                    <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
+                                </jdk>
+                                <jdk>
+                                    <name>zulu11Osx</name>
+                                    <platform>osx</platform>
+                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
+                                    <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
+                                </jdk>
+                            </jdks>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>download-jdks</id>
@@ -189,28 +191,6 @@
                                 <goals>
                                     <goal>setup-jdks</goal>
                                 </goals>
-                                <configuration>
-                                    <jdks>
-                                        <jdk>
-                                            <name>zulu11Linux</name>
-                                            <platform>linux</platform>
-                                            <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
-                                            <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
-                                        </jdk>
-                                        <jdk>
-                                            <name>zulu11Windows</name>
-                                            <platform>windows</platform>
-                                            <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
-                                            <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
-                                        </jdk>
-                                        <jdk>
-                                            <name>zulu11Osx</name>
-                                            <platform>osx</platform>
-                                            <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
-                                            <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
-                                        </jdk>
-                                    </jdks>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -218,6 +198,61 @@
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
                         <version>${jreleaser-plugin.version}</version>
+                        <configuration>
+                            <jreleaser>
+                                <environment>
+                                    <properties>
+                                        <jdkFilePrefix>zulu11.48.21-ca-jdk11.0.11</jdkFilePrefix>
+                                    </properties>
+                                </environment>
+                                <assemble>
+                                    <jlink>
+                                        <q-cli>
+                                            <active>ALWAYS</active>
+                                            <java>
+                                                <mainClass>io.quarkus.bootstrap.runner.QuarkusEntryPoint</mainClass>
+                                            </java>
+                                            <imageName>{{distributionName}}-{{projectVersion}}</imageName>
+                                            <targetJdks>
+                                                <targetJdk>
+                                                    <path>${project.build.directory}/jdks/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home</path>
+                                                    <platform>osx-x86_64</platform>
+                                                </targetJdk>
+                                                <targetJdk>
+                                                    <path>${project.build.directory}/jdks/zulu11Linux/{{jdkFilePrefix}}-linux_x64</path>
+                                                    <platform>linux-x86_64</platform>
+                                                </targetJdk>
+                                                <targetJdk>
+                                                    <path>${project.build.directory}/jdks/zulu11Windows/{{jdkFilePrefix}}-win_x64</path>
+                                                    <platform>windows-x86_64</platform>
+                                                </targetJdk>
+                                            </targetJdks>
+                                            <copyJars>false</copyJars>
+                                            <jdeps>
+                                                <multiRelease>base</multiRelease>
+                                                <ignoreMissingDeps>true</ignoreMissingDeps>
+                                            </jdeps>
+                                            <args>
+                                                <arg>--bind-services</arg>
+                                            </args>
+                                            <mainJar>
+                                                <path>${project.build.directory}/quarkus-app/quarkus-run.jar</path>
+                                            </mainJar>
+                                            <jars>
+                                                <jar>
+                                                    <pattern>${project.build.directory}/quarkus-app/lib/**/*.jar</pattern>
+                                                </jar>
+                                            </jars>
+                                            <fileSets>
+                                                <fileSet>
+                                                    <input>${project.build.directory}/quarkus-app</input>
+                                                </fileSet>
+                                            </fileSets>
+                                        </q-cli>
+                                    </jlink>
+                                </assemble>
+                            </jreleaser>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>assemble</id>
@@ -225,61 +260,6 @@
                                 <goals>
                                     <goal>assemble</goal>
                                 </goals>
-                                <configuration>
-                                    <jreleaser>
-                                        <environment>
-                                            <properties>
-                                                <jdkFilePrefix>zulu11.48.21-ca-jdk11.0.11</jdkFilePrefix>
-                                            </properties>
-                                        </environment>
-                                        <assemble>
-                                            <jlink>
-                                                <q-cli>
-                                                    <active>ALWAYS</active>
-                                                    <java>
-                                                        <mainClass>io.quarkus.bootstrap.runner.QuarkusEntryPoint</mainClass>
-                                                    </java>
-                                                    <imageName>{{distributionName}}-{{projectVersion}}</imageName>
-                                                    <targetJdks>
-                                                        <targetJdk>
-                                                            <path>${project.build.directory}/jdks/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home</path>
-                                                            <platform>osx-x86_64</platform>
-                                                        </targetJdk>
-                                                        <targetJdk>
-                                                            <path>${project.build.directory}/jdks/zulu11Linux/{{jdkFilePrefix}}-linux_x64</path>
-                                                            <platform>linux-x86_64</platform>
-                                                        </targetJdk>
-                                                        <targetJdk>
-                                                            <path>${project.build.directory}/jdks/zulu11Windows/{{jdkFilePrefix}}-win_x64</path>
-                                                            <platform>windows-x86_64</platform>
-                                                        </targetJdk>
-                                                    </targetJdks>
-                                                    <copyJars>false</copyJars>
-                                                    <jdeps>
-                                                        <multiRelease>base</multiRelease>
-                                                        <ignoreMissingDeps>true</ignoreMissingDeps>
-                                                    </jdeps>
-                                                    <args>
-                                                        <arg>--bind-services</arg>
-                                                    </args>
-                                                    <mainJar>
-                                                        <path>${project.build.directory}/quarkus-app/quarkus-run.jar</path>
-                                                    </mainJar>
-                                                    <jars>
-                                                        <jar>
-                                                            <pattern>${project.build.directory}/quarkus-app/lib/**/*.jar</pattern>
-                                                        </jar>
-                                                    </jars>
-                                                    <fileSets>
-                                                        <fileSet>
-                                                            <input>${project.build.directory}/quarkus-app</input>
-                                                        </fileSet>
-                                                    </fileSets>
-                                                </q-cli>
-                                            </jlink>
-                                        </assemble>
-                                    </jreleaser>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
