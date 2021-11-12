@@ -12,6 +12,7 @@
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <java.version>11.0.11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -161,35 +162,32 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jdks-maven-plugin</artifactId>
-                        <version>0.8.0</version>
+                        <version>${jreleaser-plugin.version}</version>
                         <configuration>
-                            <jdks>
-                                <jdk>
+                            <pkgs>
+                                <pkg>
                                     <name>zulu11Linux</name>
-                                    <platform>linux</platform>
-                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-linux_x64.zip</url>
-                                    <checksum>9d1718ef74c29a8148b67ddd90bc9267fc1614e0a1eb0f4ea16e234e86419a60</checksum>
-                                </jdk>
-                                <jdk>
-                                    <name>zulu11Windows</name>
-                                    <platform>windows</platform>
-                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-win_x64.zip</url>
-                                    <checksum>7bcbaedecca73811f70a5ee89e9258afff9bc009286449d97d9b3105f52a1a3a</checksum>
-                                </jdk>
-                                <jdk>
+                                    <platform>linux-x86_64</platform>
+                                    <version>${java.version}</version>
+                                </pkg>
+                                <pkg>
                                     <name>zulu11Osx</name>
-                                    <platform>osx</platform>
-                                    <url>https://cdn.azul.com/zulu/bin/zulu11.48.21-ca-jdk11.0.11-macosx_x64.zip</url>
-                                    <checksum>abc3a9696fb6c10efcf3c5878cdb049244b0ba5dcc7141c6f0f88b99df626d2a</checksum>
-                                </jdk>
-                            </jdks>
+                                    <platform>osx-x86_64</platform>
+                                    <version>${java.version}</version>
+                                </pkg>
+                                <pkg>
+                                    <name>zulu11Windows</name>
+                                    <platform>windows-x86_64</platform>
+                                    <version>${java.version}</version>
+                                </pkg>
+                            </pkgs>
                         </configuration>
                         <executions>
                             <execution>
                                 <id>download-jdks</id>
                                 <phase>package</phase>
                                 <goals>
-                                    <goal>setup-jdks</goal>
+                                    <goal>setup-disco</goal>
                                 </goals>
                             </execution>
                         </executions>
