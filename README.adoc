@@ -16,7 +16,10 @@ WARNING: You need Java 11 to build JReleaser. It might work with other versions 
 .Steps
 1. `git clone https://github.com/jreleaser/jreleaser.git`
 2. `cd jreleaser`
-3. `./gradlew publishToMavenLocal`
+3. `rm -rf .gradle && ./gradlew --no-build-cache clean publishToMavenLocal -Prelease=true`
+
+
+The "nuke cache" options are needed only if you have previously built and published the JReleaser Maven plugins.
 
 == Building & Assembling
 
