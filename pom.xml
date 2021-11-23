@@ -79,6 +79,106 @@
             </extension>
         </extensions>
 
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jreleaser</groupId>
+                    <artifactId>jreleaser-maven-plugin</artifactId>
+                    <version>${jreleaser-plugin.version}</version>
+                    <configuration>
+                        <jreleaser>
+                            <environment>
+                                <properties>
+                                    <jdkFilePrefix>zulu11.48.21-ca-jdk11.0.11</jdkFilePrefix>
+                                </properties>
+                            </environment>
+                            <assemble>
+                                <jlink>
+                                    <q-cli>
+                                        <active>ALWAYS</active>
+                                        <java>
+                                            <mainClass>io.quarkus.bootstrap.runner.QuarkusEntryPoint</mainClass>
+                                        </java>
+                                        <imageName>{{distributionName}}-{{projectVersion}}</imageName>
+                                        <targetJdks>
+                                            <targetJdk>
+                                                <path>${project.build.directory}/jdks/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home</path>
+                                                <platform>osx-x86_64</platform>
+                                            </targetJdk>
+                                            <targetJdk>
+                                                <path>${project.build.directory}/jdks/zulu11Linux/{{jdkFilePrefix}}-linux_x64</path>
+                                                <platform>linux-x86_64</platform>
+                                            </targetJdk>
+                                            <targetJdk>
+                                                <path>${project.build.directory}/jdks/zulu11Windows/{{jdkFilePrefix}}-win_x64</path>
+                                                <platform>windows-x86_64</platform>
+                                            </targetJdk>
+                                        </targetJdks>
+                                        <copyJars>false</copyJars>
+                                        <jdeps>
+                                            <multiRelease>base</multiRelease>
+                                            <ignoreMissingDeps>true</ignoreMissingDeps>
+                                        </jdeps>
+                                        <args>
+                                            <arg>--bind-services</arg>
+                                        </args>
+                                        <mainJar>
+                                            <path>${project.build.directory}/quarkus-app/quarkus-run.jar</path>
+                                        </mainJar>
+                                        <jars>
+                                            <jar>
+                                                <pattern>${project.build.directory}/quarkus-app/lib/**/*.jar</pattern>
+                                            </jar>
+                                        </jars>
+                                        <fileSets>
+                                            <fileSet>
+                                                <input>${project.build.directory}/quarkus-app</input>
+                                            </fileSet>
+                                        </fileSets>
+                                    </q-cli>
+                                </jlink>
+                            </assemble>
+                            <release>
+                                <github>
+                                    <tagName>{{projectVersion}}</tagName>
+                                    <releaseName>{{projectVersion}}</releaseName>
+                                    <overwrite>true</overwrite>
+                                    <changelog>
+                                        <formatted>ALWAYS</formatted>
+                                        <preset>conventional-commits</preset>
+                                        <format>- {{commitShortHash}} {{commitTitle}}</format>
+                                        <contributors>
+                                            <format>- {{contributorName}}</format>
+                                        </contributors>
+                                        <labelers>
+                                            <labeler>
+                                                <label>task_prep</label>
+                                                <title>Preparing</title>
+                                            </labeler>
+                                            <labeler>
+                                                <label>task_rel</label>
+                                                <title>Releasing</title>
+                                            </labeler>
+                                        </labelers>
+                                        <categories>
+                                            <category>
+                                                <title>🧰 Tasks</title>
+                                                <labels>task,task_prep,task_rel</labels>
+                                            </category>
+                                        </categories>
+                                        <hide>
+                                            <categories>🔀 Merge</categories>
+                                            <contributors>GitHub,dependabot</contributors>
+                                        </hide>
+                                    </changelog>
+                                </github>
+                            </release>
+                        </jreleaser>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>${quarkus.platform.group-id}</groupId>
@@ -195,62 +295,6 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>${jreleaser-plugin.version}</version>
-                        <configuration>
-                            <jreleaser>
-                                <environment>
-                                    <properties>
-                                        <jdkFilePrefix>zulu11.48.21-ca-jdk11.0.11</jdkFilePrefix>
-                                    </properties>
-                                </environment>
-                                <assemble>
-                                    <jlink>
-                                        <q-cli>
-                                            <active>ALWAYS</active>
-                                            <java>
-                                                <mainClass>io.quarkus.bootstrap.runner.QuarkusEntryPoint</mainClass>
-                                            </java>
-                                            <imageName>{{distributionName}}-{{projectVersion}}</imageName>
-                                            <targetJdks>
-                                                <targetJdk>
-                                                    <path>${project.build.directory}/jdks/zulu11Osx/{{jdkFilePrefix}}-macosx_x64/zulu-11.jdk/Contents/Home</path>
-                                                    <platform>osx-x86_64</platform>
-                                                </targetJdk>
-                                                <targetJdk>
-                                                    <path>${project.build.directory}/jdks/zulu11Linux/{{jdkFilePrefix}}-linux_x64</path>
-                                                    <platform>linux-x86_64</platform>
-                                                </targetJdk>
-                                                <targetJdk>
-                                                    <path>${project.build.directory}/jdks/zulu11Windows/{{jdkFilePrefix}}-win_x64</path>
-                                                    <platform>windows-x86_64</platform>
-                                                </targetJdk>
-                                            </targetJdks>
-                                            <copyJars>false</copyJars>
-                                            <jdeps>
-                                                <multiRelease>base</multiRelease>
-                                                <ignoreMissingDeps>true</ignoreMissingDeps>
-                                            </jdeps>
-                                            <args>
-                                                <arg>--bind-services</arg>
-                                            </args>
-                                            <mainJar>
-                                                <path>${project.build.directory}/quarkus-app/quarkus-run.jar</path>
-                                            </mainJar>
-                                            <jars>
-                                                <jar>
-                                                    <pattern>${project.build.directory}/quarkus-app/lib/**/*.jar</pattern>
-                                                </jar>
-                                            </jars>
-                                            <fileSets>
-                                                <fileSet>
-                                                    <input>${project.build.directory}/quarkus-app</input>
-                                                </fileSet>
-                                            </fileSets>
-                                        </q-cli>
-                                    </jlink>
-                                </assemble>
-                            </jreleaser>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>assemble</id>
@@ -271,46 +315,6 @@
                     <plugin>
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
-                        <version>${jreleaser-plugin.version}</version>
-                        <configuration>
-                            <jreleaser>
-                                <release>
-                                    <github>
-                                        <tagName>{{projectVersion}}</tagName>
-                                        <releaseName>{{projectVersion}}</releaseName>
-                                        <overwrite>true</overwrite>
-                                        <changelog>
-                                            <formatted>ALWAYS</formatted>
-                                            <preset>conventional-commits</preset>
-                                            <format>- {{commitShortHash}} {{commitTitle}}</format>
-                                            <contributors>
-                                                <format>- {{contributorName}}</format>
-                                            </contributors>
-                                            <labelers>
-                                                <labeler>
-                                                    <label>task_prep</label>
-                                                    <title>Preparing</title>
-                                                </labeler>
-                                                <labeler>
-                                                    <label>task_rel</label>
-                                                    <title>Releasing</title>
-                                                </labeler>
-                                            </labelers>
-                                            <categories>
-                                                <category>
-                                                    <title>🧰 Tasks</title>
-                                                    <labels>task,task_prep,task_rel</labels>
-                                                </category>
-                                            </categories>
-                                            <hide>
-                                                <categories>🔀 Merge</categories>
-                                                <contributors>GitHub,dependabot</contributors>
-                                            </hide>
-                                        </changelog>
-                                    </github>
-                                </release>
-                            </jreleaser>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
