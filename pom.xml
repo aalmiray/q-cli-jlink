@@ -19,7 +19,7 @@
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
         <quarkus.platform.version>2.4.1.Final</quarkus.platform.version>
         <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-        <jreleaser-plugin.version>0.9.0-SNAPSHOT</jreleaser-plugin.version>
+        <jreleaser-plugin.version>0.9.0</jreleaser-plugin.version>
     </properties>
 
     <name>q-cli-jlink</name>

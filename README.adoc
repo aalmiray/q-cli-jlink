@@ -8,21 +8,6 @@ via link:https://jreleaser.org[JReleaser].
 
 == Prerequisites
 
-This sample requires features from JReleaser `v0.9.0-SNAPSHOT` (unreleased).
-You must build and install your own snapshot first.
-
-WARNING: You need Java 11 to build JReleaser. It might work with other versions up to 15 but no greater than 15.
-
-.Steps
-1. `git clone https://github.com/jreleaser/jreleaser.git`
-2. `cd jreleaser`
-3. `rm -rf .gradle && ./gradlew --no-build-cache clean publishToMavenLocal -Prelease=true`
-
-
-The "nuke cache" options are needed only if you have previously built and published the JReleaser Maven plugins.
-
-== Building & Assembling
-
 WARNING: Java 11 is required to build this sample.
 
 `$ ./mvnw -Passemble package`
